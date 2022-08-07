@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Open network",
+    "open": true
+  },
+  {
+    "name": "Closed network",
+    "open": false
+  },
+  {
+    "name": "Another network",
+    "open": true
+  },
+  {
+    "name": "😱",
+    "open": true
+  }
+]

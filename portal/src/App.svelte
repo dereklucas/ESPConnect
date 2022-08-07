@@ -16,6 +16,7 @@
       ssid: "",
     },
     access_points: [],
+    id: "",
   };
 
   function setConnectSuccess() {
@@ -55,11 +56,12 @@
   }
 
   async function updateAccessPoints() {
-    // const res = await fetch(`/espconnect/scan`);
-    const res = await fetch(`/points.json`);
+    const res = await fetch(`/espconnect/scan`);
+    // const res = await fetch(`/points.json`); // dev data
     if (res.status === 200) {
       data.access_points = await res.json();
       data.loading = false;
+      data.id = res.headers.get("x-id");
     } else if (res.status === 202) {
       setTimeout(updateAccessPoints, 2000);
     }
@@ -138,7 +140,9 @@
       </p>
     </div>
   </div>
-  <div class="id">[ID]</div>
+  {#if data.id}
+    <div class="id">[{data.id}]</div>
+  {/if}
 </div>
 
 <style type="text/scss" global>
