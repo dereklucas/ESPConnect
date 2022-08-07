@@ -133,6 +133,9 @@
   </div>
   <div class="row">
     <div class="column text-sm text-muted">
+      {#if data.id}
+        <p class="id text-center">[{data.id}]</p>
+      {/if}
       <p class="text-center">
         <a class="link" href="https://cards.vgood.science" target="_blank"
           >What is this thing?</a
@@ -140,9 +143,6 @@
       </p>
     </div>
   </div>
-  {#if data.id}
-    <div class="id">[{data.id}]</div>
-  {/if}
 </div>
 
 <style type="text/scss" global>
@@ -175,10 +175,6 @@
   }
 
   .id {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    padding: 1rem;
     font-weight: 500;
     letter-spacing: 0.1rem;
   }
