@@ -28,6 +28,13 @@
     data.connectStatus.success = false;
   }
 
+  function clearConnectionStatus() {
+    clearSelection();
+
+    data.connectStatus.sent = false;
+    data.connectStatus.success = true;
+  }
+
   function clearSelection() {
     data.selection.selected = false;
     data.selection.direct_connect = false;
@@ -48,7 +55,8 @@
   }
 
   async function updateAccessPoints() {
-    const res = await fetch(`/espconnect/scan`);
+    // const res = await fetch(`/espconnect/scan`);
+    const res = await fetch(`/points.json`);
     if (res.status === 200) {
       data.access_points = await res.json();
       data.loading = false;
@@ -70,16 +78,7 @@
 <div class="container main-container">
   <div class="row">
     <div class="column text-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="64"
-        height="64"
-        viewBox="0 0 24 24"
-        class="logo"
-        ><path
-          d="M5 12L3 12 3 21 12 21 12 19 5 19zM12 5L19 5 19 12 21 12 21 3 12 3z"
-        /></svg
-      >
+      <h3>Set up your card's WiFi</h3>
     </div>
   </div>
   <div class="row mb-2">
@@ -121,7 +120,11 @@
             />
           {/if}
         {:else}
-          <Status success={data.connectStatus.success} />
+          <Status
+            ssid={data.selection.ssid}
+            success={data.connectStatus.success}
+            on:back={clearConnectionStatus}
+          />
         {/if}
       </div>
     </div>
@@ -130,11 +133,12 @@
     <div class="column text-sm text-muted">
       <p class="text-center">
         <a class="link" href="https://cards.vgood.science" target="_blank"
-          >What is this?</a
+          >What is this thing?</a
         >
       </p>
     </div>
   </div>
+  <div class="id">[ID]</div>
 </div>
 
 <style type="text/scss" global>
@@ -158,10 +162,21 @@
   @import "../node_modules/spinthatshit/src/animations.scss";
   @import "../node_modules/spinthatshit/src/loaders/_loader10.scss";
 
+  html,
   body {
+    margin: 0;
     font-family: "Mont", system-ui, "Helvetica Neue", "Helvetica", "Arial",
       sans-serif;
     background: $white;
+  }
+
+  .id {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
   }
 
   .link {
@@ -214,7 +229,7 @@
 
   .clickable-row {
     padding: 1rem 0rem;
-    border-bottom: 0.1rem solid #f4f5f6;
+    border-bottom: 0.1rem solid lighten($black, 50%);
     transition: background-color 0.5s cubic-bezier(0.215, 0.61, 0.355, 1),
       box-shadow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     border-radius: 0.5rem;
@@ -229,8 +244,8 @@
   input[type="text"],
   input[type="password"] {
     padding: 2.5rem 2rem !important;
-    box-shadow: rgba(204, 219, 232, 0.2) 0px 3px 6px 1px inset,
-      rgba(255, 255, 255, 0.4) 0px 0px 6px 6px inset;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 6px 1px inset,
+      #e3e3e3 0px 0px 6px 6px inset;
     border: none;
     font-size: 16px !important;
   }
