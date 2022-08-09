@@ -139,7 +139,22 @@ bool ESPConnectClass::start_portal()
         _sta_ssid = ssid;
         _sta_password = password;
         WiFi.begin(_sta_ssid.c_str(), _sta_password.c_str());
-        request->send(200, "application/json", "{\"message\":\"Credentials Saved. Rebooting...\"}");
+
+        unsigned long lastMillis = millis();
+        unsigned long connect_timeout = 10000;
+        while (WiFi.status() != WL_CONNECTED && (unsigned long)(millis() - lastMillis) < connect_timeout)
+        {
+          yield();
+        }
+
+        if (WiFi.status() != WL_CONNECTED)
+        {
+          return request->send(500, "application/json", "{\"message\":\"Error while saving WiFi Credentials: "+String(ok)+"\"}");
+        }
+        else
+        {
+          request->send(200, "application/json", "{\"message\":\"Credentials Saved. Rebooting...\"}");
+        }
       }else{
         Serial.printf("WiFi config failed with: %d\n", ok);
         return request->send(500, "application/json", "{\"message\":\"Error while saving WiFi Credentials: "+String(ok)+"\"}");
